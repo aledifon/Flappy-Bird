@@ -14,11 +14,18 @@ public class Player : MonoBehaviour
     private SpriteRenderer spriteRenderer;
     [SerializeField] private Sprite[] sprites;
 
+    [Header("Audio Fx")]    
+    [SerializeField] AudioClip hitFx;
+    [SerializeField] AudioClip jumpFx;
+
+    AudioSource audioSource;
+
     private int spriteIndex;
 
     private void Awake()
     {
         spriteRenderer = GetComponent<SpriteRenderer>();
+        audioSource = GetComponent<AudioSource>();
     }
 
     private void Start()
@@ -60,6 +67,7 @@ public class Player : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetMouseButtonDown(0))
         {
             direction = Vector3.up * strength;
+            PlayJumpFx();
         }
     }
     private void Touches()
@@ -74,6 +82,7 @@ public class Player : MonoBehaviour
             if (touch.phase == TouchPhase.Began)
             {
                 direction = Vector3.up * strength;
+                PlayJumpFx();
             }
         }
     }
@@ -89,5 +98,20 @@ public class Player : MonoBehaviour
             spriteIndex = 0;
 
         spriteRenderer.sprite = sprites[spriteIndex];
+    }
+    private void PlayFx(AudioClip audioClip)
+    {
+        //if (audioSource.isPlaying)
+        //    audioSource.Stop();
+
+        audioSource.PlayOneShot(audioClip);
+    }    
+    public void PlayHitFx()
+    {
+        PlayFx(hitFx);
+    }
+    public void PlayJumpFx()
+    {
+        PlayFx(jumpFx);
     }
 }

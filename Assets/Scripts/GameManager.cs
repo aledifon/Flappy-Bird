@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using UnityEngine.Audio;
 
 public class GameManager : MonoBehaviour
 {
@@ -32,6 +33,11 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject getReady;
     [SerializeField] private Player player;
 
+    [Header("Audio")]
+    [SerializeField] AudioClip pointFx;
+    AudioSource audioSource;
+
+
     // Start is called before the first frame update
     void Awake()
     {
@@ -44,6 +50,8 @@ public class GameManager : MonoBehaviour
         instance = this;
         DontDestroyOnLoad(gameObject);
 
+        audioSource = GetComponent<AudioSource>();
+
         Pause();
     }
 
@@ -51,6 +59,7 @@ public class GameManager : MonoBehaviour
     {
         gameOver.SetActive(true);
         playButton.SetActive(true);
+        player.PlayHitFx();
 
         Pause();
     }
@@ -59,6 +68,7 @@ public class GameManager : MonoBehaviour
     {
         score++;
         scoreText.text = score.ToString();
+        PlayPointFx();
     }
     public void Play()
     {
@@ -82,5 +92,16 @@ public class GameManager : MonoBehaviour
     {
         Time.timeScale = 0f;
         player.enabled = false;
+    }
+    private void PlayFx(AudioClip audioClip)
+    {
+        //if (audioSource.isPlaying)
+        //    audioSource.Stop();
+
+        audioSource.PlayOneShot(audioClip);
+    }
+    public void PlayPointFx()
+    {
+        PlayFx(pointFx);
     }
 }
